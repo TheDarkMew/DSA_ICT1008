@@ -31,7 +31,7 @@ edges = [
     ("Punggol MRT", "bus 102 stop 1", 9),
     ("Punggol MRT", "bus 103 ", 14),
     ("bus 101 stop 1", "bus 102 stop 2", 10),
-    ("bus 101 stop 1", "bus 101 stop2", 15), 
+    ("bus 101 stop 1", "bus 101 stop2", 15),
     ("bus 102 stop 1", "bus 101 stop 2", 11),
     ("bus 102 stop 1", "f", 2),
     ("bus 101 stop 2", "SIT", 6),
