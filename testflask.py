@@ -1,17 +1,17 @@
-from flask import Flask, render_template
-from collections import deque, namedtuple
-from flask import jsonify
-import distrack as a
+from flask import Flask
 import folium
+import osmnx as ox
 
 app = Flask(__name__)
 @app.route('/')
 def index():
-    # test = (a.dijsktra(a.graph, 'Punggol MRT', 'SIT'))
-    # return render_template("index.html",test=test)
     start_coords = (1.40527,103.90236) #punggol mrt
-    folium_map = folium.Map(location=start_coords, zoom_start=50, width="75%", height="75%")
-
+    folium_map = folium.Map(location=start_coords, tiles='Stamen Toner', zoom_start=50, width="75%", height="75%")
+    place = "Northeast, Singapore, Singapore"
+    hdb = ox.footprints_from_point(point=start_coords, distance=2000, footprint_type='building')
+    hdb_points = hdb[hdb.building == 'residential']
+    style_buildings = {'color':' #6C3483', 'fillColor': '#33FFC0 ', 'weight':'1', 'fillOpacity' : 0}
+    folium.GeoJson(hdb_points,style_function=lambda x: style_buildings, tooltip='HDB').add_to(folium_map)
     return folium_map._repr_html_()
 
 if __name__ == "__main__":
