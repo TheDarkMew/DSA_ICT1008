@@ -1,96 +1,4 @@
 from collections import defaultdict
-import csv
-from math import radians, cos, sin, asin, sqrt
-import re
-
-
-# np.set_printoptions(threshold=np.inf)
-
-# display only punggol area mrt lrt
-def readMRTSG():
-    new_area = []
-    with open("mrtfaretime.csv", 'r') as f:
-        next(f)
-        data = list(csv.reader(f, delimiter=","))
-    f.close()
-    for row in data:
-        row[0] = row[0].replace('\xa0', ' ').encode('utf-8')
-        row[0] = re.sub(' {2,}', ' ', row[0])
-        row[1] = row[1].replace('\xa0', ' ').encode('utf-8')
-        row[1] = re.sub(' {2,}', ' ', row[1])
-        row[8] = row[8].replace('\xa0', '').encode('utf-8')
-        row[11] = row[11].replace('\xa0', '').encode('utf-8')
-        if "PE" in row[8] and "PE" in row[11]:
-            new_area.append(row)
-        if "PW" in row[8] and "PW" in row[11]:
-            new_area.append(row)
-        elif "PE" in row[8] and "PW" in row[11]:
-            new_area.append(row)
-        elif "PW" in row[8] and "PE" in row[11]:
-            new_area.append(row)
-        elif "PE" in row[8] and "NE17" in row[11]:
-            new_area.append(row)
-        elif "PW" in row[8] and "NE17" in row[11]:
-            new_area.append(row)
-        elif "NE17" in row[8] and "PE" in row[11]:
-            new_area.append(row)
-        elif "NE17" in row[8] and "PW" in row[11]:
-            new_area.append(row)
-    new_area = calculate_distance(new_area)
-    return new_area
-
-
-def calculate_distance(mrtsg):
-    for row in mrtsg:
-        x = distance(float(row[9]), float(row[12]), float(row[10]), float(row[13]))
-        x = float("%.2f" % round(x, 2))
-        row.insert(14, x)
-    return mrtsg
-
-
-def add_edges_mrt(mrtsg, edges):
-    PW = ("NE17", "PW1", "PW3", "PW4", "PW5", "PW6", "PW7", "NE17")
-    PE = ("NE17", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "NE17")
-    i = 0
-    j = 8
-    k = 0
-    l = 7
-    for row in mrtsg:
-        if (row[8] == PE[i]) and (row[11] == PE[i + 1]):
-            edges.append((row[0], row[1], row[14]))
-            i += 1
-        elif (row[8] == PE[j]) and (row[11] == PE[i - 1]):
-            edges.append((row[0], row[1], row[14]))
-            j -= 1
-        elif (row[8] == PW[k]) and (row[11] == PW[k + 1]):
-            edges.append((row[0], row[1], row[14]))
-            k += 1
-        elif (row[8] == PW[l]) and (row[11] == PW[l - 1]):
-            edges.append((row[0], row[1], row[14]))
-            l -= 1
-    return edges
-
-
-def distance(lat1, lat2, lon1, lon2):
-    # The math module contains a function named
-    # radians which converts from degrees to radians.
-    lon1 = radians(lon1)
-    lon2 = radians(lon2)
-    lat1 = radians(lat1)
-    lat2 = radians(lat2)
-
-    # Haversine formula
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
-
-    c = 2 * asin(sqrt(a))
-
-    # Radius of earth in kilometers. Use 3956 for miles
-    r = 6371
-
-    # calculate the result
-    return c * r
 
 
 class Graph():
@@ -111,6 +19,27 @@ class Graph():
         self.edges[to_node].append(from_node)
         self.weights[(from_node, to_node)] = weight
         self.weights[(to_node, from_node)] = weight
+
+
+
+
+
+graph = Graph()
+
+edges = [
+    ("Punggol MRT", "bus 101 stop 1", 7),
+    ("Punggol MRT", "bus 102 stop 1", 9),
+    ("Punggol MRT", "bus 103 ", 14),
+    ("bus 101 stop 1", "bus 102 stop 2", 10),
+    ("bus 101 stop 1", "bus 101 stop2", 15),
+    ("bus 102 stop 1", "bus 101 stop 2", 11),
+    ("bus 102 stop 1", "f", 2),
+    ("bus 101 stop 2", "SIT", 6),
+    ("e", "f", 9)
+]
+
+for edge in edges:
+    graph.add_edge(*edge)
 
 
 def dijsktra(graph, initial, end):
@@ -148,24 +77,7 @@ def dijsktra(graph, initial, end):
         current_node = next_node
     # Reverse path
     path = path[::-1]
-    print("%.2fKM"%(weight))
     return path
 
 
-graph = Graph()
-edges = [
-    ("NE17 PTC Punggol", "bus 101 stop 1", 7),
-    ("NE17 PTC Punggol", "bus 102 stop 1", 9),
-    ("NE17 PTC Punggol", "bus 103 ", 14),
-    ("bus 101 stop 1", "bus 102 stop 2", 10),
-    ("bus 101 stop 1", "bus 101 stop2", 15),
-    ("bus 102 stop 1", "bus 101 stop 2", 11),
-    ("bus 102 stop 1", "f", 2),
-    ("bus 101 stop 2", "SIT", 6),
-]
-
-datamrt = readMRTSG()
-edges = add_edges_mrt(datamrt, edges)
-for edge in edges:
-    graph.add_edge(*edge)
-print (dijsktra(graph, 'PW4 Samudera', 'SIT'))
+print (dijsktra(graph, 'Punggol MRT', 'SIT'))
