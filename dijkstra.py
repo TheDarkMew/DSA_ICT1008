@@ -1,4 +1,5 @@
 from collections import defaultdict
+import read_bus_jsons
 
 
 class Graph():
@@ -88,4 +89,5 @@ def dijsktra(graph, initial, end):
     return path
 
 
-print (dijsktra(graph, 'Punggol MRT', 'SIT'))
+read_bus_jsons.add_busstops_to_graph(graph,edges)
+print (dijsktra(graph, 'Aft Punggol Field', 'Soo Teck Stn'))
