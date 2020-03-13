@@ -138,3 +138,14 @@ def read_stop_info(jsonlink):
 # graph = dijkstra.Graph()
 # edges = []
 # print(dijkstra.dijsktra(graph,'Opp The Rivervale', 'Aft TPE'))
+
+# stores the bus data into desciprtion,long,lat,buscode to be used in other code)
+def readBus(newdict):
+    punggol_buses = json.loads(open('datasets/bus/punggol_buses.json').read())
+    for bus in punggol_buses:
+        if bus['Description'] and bus['Longitude'] and bus['Latitude'] and bus['BusStopCode']:
+            newdict.append(bus['Description'])
+            newdict.append(bus['Longitude'])
+            newdict.append(bus['Latitude'])
+            newdict.append(bus['BusStopCode'])
+    return newdict

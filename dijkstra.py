@@ -1,6 +1,6 @@
 from collections import defaultdict
-import read_bus_jsons
-
+import read_bus_jsons as rbj
+import bustohdb as bth
 
 class Graph():
     def __init__(self):
@@ -26,6 +26,7 @@ class Graph():
 
 
 graph = Graph()
+
 
 edges = [
     ("Punggol MRT", "bus 101 stop 1", 7),
@@ -89,5 +90,41 @@ def dijsktra(graph, initial, end):
     return path
 
 
-read_bus_jsons.add_busstops_to_graph(graph,edges)
-print (dijsktra(graph, 'Aft Punggol Field', 'Soo Teck Stn'))
+#theses list are used to hold data ( sotre
+lastBusStopHolder=[]
+allBusStopDetails=[]
+BusStopDetails=[]
+rbj.add_busstops_to_graph(graph,edges)
+
+print (dijsktra(graph, 'Aft Punggol Field', 'Meridian Stn Exit B'))
+
+#used to append the 2nd last point of the list to a list ( which is storeLast)
+bth.storeLast((dijsktra(graph, 'Aft Punggol Field', 'Meridian Stn Exit B')),lastBusStopHolder)
+
+# reads all the data of the bus and appends them in only for the bus stop description/lat/long/bus stop code to storeLast2
+rbj.readBus((allBusStopDetails))
+
+#returns in string format rather than list
+bth.returnLast(lastBusStopHolder)
+
+#This gets the last bus stop details and store it into
+print bth.match(lastBusStopHolder,allBusStopDetails,BusStopDetails)
+
+#This gets the bus stop code( after comparing)
+bth.getBusCode(BusStopDetails)
+
+#Gets the Detail via the oneMapAPI which then will be used in below
+bth.oneMap_apicall(bth.getBusCode(BusStopDetails))
+
+bth.getLong(bth.oneMap_apicall(bth.getBusCode(BusStopDetails)))
+
+#Example usage of end point to use for distance
+bth.getLat(bth.oneMap_apicall("824174"))
+bth.getLong(bth.oneMap_apicall("824174"))
+
+#Gets the distance of the both lat/long points and calculates the distance between them
+x =  bth.distance(bth.getLat(bth.oneMap_apicall(bth.getBusCode(BusStopDetails))),bth.getLat(bth.oneMap_apicall("824174")),
+       bth.getLong(bth.oneMap_apicall(bth.getBusCode(BusStopDetails))),bth.getLong(bth.oneMap_apicall("824174")))
+print x
+#some useless formula adding
+print bth.addUpDist(dijsktra(graph, 'Aft Punggol Field', 'Meridian Stn Exit B'),x)

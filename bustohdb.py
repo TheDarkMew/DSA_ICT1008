@@ -1,5 +1,6 @@
 import json
 from math import *
+
 import math
 import httplib2 as http
 
@@ -59,15 +60,49 @@ def distance(lat1, lat2, lon1, lon2):
     # calculate the result ( based on km)
     return c * r
 
+#for checking space between the input ( unsure if i still need this since most bus stop codes would be used instead)
 def spaceCheck(stringinput):
     return stringinput.replace(" ","%20")
 
 
-newdict=[]
+#Appends the final stop of the list ( since last is the distance, so the append is from -2 ( which is last point / i believe need to change this to -3 to suit the point better)
+def storeLast(route,store):
+    store.append(route[-2])
+
+
+#returns the busstop description after the data has been used since not all bus stops have the proper name so need to use this
+def returnLast(store):
+    busstop = store[0]
+    return busstop
+
+
+# gets the lat/long/bus codes via LIST ( not dict)
+def getLatList(storeLast3):
+    return storeLast3[2]
+def getLongList(storeLast3):
+    return storeLast3[1]
+def getBusCode(storeLast3):
+    return storeLast3[3]
+#Matches the last stop to the list to search for bus stop code and its lat/long
+def match(storeLast,storeLast2,storeLast3):
+    for stop in storeLast2:
+        if returnLast(storeLast) == stop:
+            index = storeLast2.index(stop)
+            storeLast3.append(storeLast2[index])   #Description
+            storeLast3.append(storeLast2[index+1]) #Long
+            storeLast3.append(storeLast2[index + 2]) #Lat
+            storeLast3.append(storeLast2[index + 3]) #busstop code
+    return storeLast3
+
+#Distance adding but i think this is useless cause not added to the algorthim
+def addUpDist(list1,list2):
+    newDist= float(list1[-1][15:]) + float(list2)
+    return newDist
+
+#newdict=[]
+#newdict2=[]
 # User Input for Address
-address = raw_input("Enter Address: ")
-print(spaceCheck(address))
-
-test(oneMap_apicall(spaceCheck(address)),  newdict)
-
-print(newdict)
+#address = raw_input("Enter Address: ")
+#print(spaceCheck(address))
+#test(oneMap_apicall(spaceCheck(address)),  newdict)
+#print(newdict)
