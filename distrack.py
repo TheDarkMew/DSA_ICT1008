@@ -15,7 +15,7 @@ def readMRTSG():
     f.close()
     for row in data:
         row[0] = row[0].replace('\xa0', ' ').encode('utf-8')
-        row[0] = re.sub(' {2,}', ' ', row[0])
+        row[0] = re.sub(' {2,}', ' ', row[0])  # remove unnecessary spacing
         row[1] = row[1].replace('\xa0', ' ').encode('utf-8')
         row[1] = re.sub(' {2,}', ' ', row[1])
         row[8] = row[8].replace('\xa0', '').encode('utf-8')
@@ -36,11 +36,37 @@ def readMRTSG():
             new_area.append(row)
         elif "NE17" in row[8] and "PW" in row[11]:
             new_area.append(row)
-    new_area = calculate_distance(new_area)
+    new_area = calculate_distance_mrt(new_area)
     return new_area
 
 
-def calculate_distance(mrtsg):
+def readHDBSG(datamrt, edges):
+    with open("sg_zipcode_mapper.csv") as f:
+        next(f)
+        data = list(csv.reader(f, delimiter=","))
+    f.close()
+    return add_edges_hdb(data, datamrt, edges)
+
+
+def sortFirst(val):
+    return val[0]
+
+
+def add_edges_hdb(hdbsg, mrtsg, edges):
+    new_hdb = []  # new_hdb[searchval, lat1, lo
+    for rowmrt in mrtsg:
+        for rowhdb in hdbsg:
+            x = distance(float(rowmrt[9]), float(rowhdb[1]), float(rowmrt[10]), float(rowhdb[2]))
+            x = float("%.2f" % round(x, 2))
+            if x < 0.2:
+                edges.append((rowmrt[0], rowhdb[7], x))
+    edges = list(dict.fromkeys(edges)) # remove duplicates
+    edges.sort(key=sortFirst)   # sort first element ascending order
+    print edges
+    return edges
+
+
+def calculate_distance_mrt(mrtsg):
     for row in mrtsg:
         x = distance(float(row[9]), float(row[12]), float(row[10]), float(row[13]))
         x = float("%.2f" % round(x, 2))
@@ -116,6 +142,7 @@ class Graph():
 def dijsktra(graph, initial, end):
     # shortest paths is a dict of nodes
     # whose value is a tuple of (previous node, weight)
+    global weight
     shortest_paths = {initial: (None, 0)}
     current_node = initial
     visited = set()
@@ -148,24 +175,25 @@ def dijsktra(graph, initial, end):
         current_node = next_node
     # Reverse path
     path = path[::-1]
-    print("%.2fKM"%(weight))
+    print("%.2fKM" % (weight))
     return path
 
 
 graph = Graph()
 edges = [
-    ("NE17 PTC Punggol", "bus 101 stop 1", 7),
-    ("NE17 PTC Punggol", "bus 102 stop 1", 9),
-    ("NE17 PTC Punggol", "bus 103 ", 14),
-    ("bus 101 stop 1", "bus 102 stop 2", 10),
-    ("bus 101 stop 1", "bus 101 stop2", 15),
-    ("bus 102 stop 1", "bus 101 stop 2", 11),
-    ("bus 102 stop 1", "f", 2),
-    ("bus 101 stop 2", "SIT", 6),
+    ("274D PUNGGOL PLACE PUNGGOL REGALIA SINGAPORE 824274", "bus 101 stop 1", 2.3),
+    ("274D PUNGGOL PLACE PUNGGOL REGALIA SINGAPORE 824274", "bus 102 stop 1", 3),
+    ("NE17 PTC Punggol", "bus 103 ", 0.2),
+    ("bus 101 stop 1", "bus 102 stop 2", 3.1),
+    ("bus 101 stop 1", "bus 101 stop2", 1.2),
+    ("bus 102 stop 1", "bus 101 stop 2", 0.9),
+    ("bus 102 stop 1", "f", 1),
+    ("bus 101 stop 2", "SIT", 1.2),
 ]
 
 datamrt = readMRTSG()
 edges = add_edges_mrt(datamrt, edges)
+edges = readHDBSG(datamrt, edges)
 for edge in edges:
     graph.add_edge(*edge)
 print (dijsktra(graph, 'PW4 Samudera', 'SIT'))
