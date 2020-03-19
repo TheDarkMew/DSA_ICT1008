@@ -143,5 +143,5 @@ newdict2=[]
 #test(oneMap_apicall(spaceCheck(address)),  newdict)
 #print(newdict)
 
-testArea(oneMap_areaCall(1.3984,103.9072),newdict)
-print(newdict)
+#testArea(oneMap_areaCall(1.3984,103.9072),newdict)
+#print(newdict)

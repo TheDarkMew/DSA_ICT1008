@@ -62,7 +62,7 @@ def add_edges_hdb(hdbsg, mrtsg, edges):
                 edges.append((rowmrt[0], rowhdb[7], x))
     edges = list(dict.fromkeys(edges)) # remove duplicates
     edges.sort(key=sortFirst)   # sort first element ascending order
-    print edges
+    print (edges)
     return edges
 
 

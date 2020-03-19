@@ -108,7 +108,7 @@ rbj.readBus((allBusStopDetails))
 bth.returnLast(lastBusStopHolder)
 
 #This gets the last bus stop details and store it into
-print bth.match(lastBusStopHolder,allBusStopDetails,BusStopDetails)
+print (bth.match(lastBusStopHolder,allBusStopDetails,BusStopDetails))
 
 #This gets the bus stop code( after comparing)
 bth.getBusCode(BusStopDetails)
@@ -125,6 +125,6 @@ bth.getLong(bth.oneMap_apicall("824174"))
 #Gets the distance of the both lat/long points and calculates the distance between them
 x =  bth.distance(bth.getLat(bth.oneMap_apicall(bth.getBusCode(BusStopDetails))),bth.getLat(bth.oneMap_apicall("824174")),
        bth.getLong(bth.oneMap_apicall(bth.getBusCode(BusStopDetails))),bth.getLong(bth.oneMap_apicall("824174")))
-print x
+print (x)
 #some useless formula adding
-print bth.addUpDist(dijsktra(graph, 'Aft Punggol Field', 'Meridian Stn Exit B'),x)
+print (bth.addUpDist(dijsktra(graph, 'Aft Punggol Field', 'Meridian Stn Exit B'),x))

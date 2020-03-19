@@ -38,20 +38,23 @@ def loopList(hdblist):
 def test(dicts,newdict):
     for hdb in dicts:
           newdict.append(hdb)
-          
+
 
 def readBus():
-    punggolhdb={}
+    #punggolhdb={}
     hdbinfo = json.loads(open(jsonFilePath).read())
-    for hdb in hdbinfo:
-        if hdb['town'] == 'PUNGGOL':
-            id = 'Results'
-            town =(hdb['town'])
-            block =(hdb['block'])
-            street =(hdb['street_name'])
-            punggolhdb[id] = town,block,street
-    
+    #for hdb in hdbinfo:
+    #    if hdb['town'] == 'PUNGGOL':
+    #        id = 'Results'
+    #        town =(hdb['town'])
+    #        block =(hdb['block'])
+    #        street =(hdb['street_name'])
+    #        punggolhdb[id] = town,block,street
+    #    print(punggolhdb)
+    punggolhdb = [{"punggol " + str(hdb['block']) : (hdb['town'], hdb['block'], hdb['street_name'])} for hdb in hdbinfo if hdb['town'] == 'PUNGGOL']
+    print(punggolhdb)
+
     with open(jsonWrite,'w') as jsonFile:
         jsonFile.write(json.dumps(punggolhdb,indent=4))
-        
+
 readBus()
