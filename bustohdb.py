@@ -16,15 +16,45 @@ def oneMap_apicall(search):
 
     jsonObj = json.loads(content)
     return [hdb for hdb in jsonObj['results']]
+def oneMap_areaCall(lat,long):
+    headers= {}
+    method = 'GET'
+    body= ''
+    getlat = str(lat)
+    getlong= str(long)
+    token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjQwMjgsInVzZXJfaWQiOjQwMjgsImVtYWlsIjoiam9lbHllbzE5OTRAZ21haWwuY29tIiwiZm9yZXZlciI6ZmFsc2UsImlzcyI6Imh0dHA6XC9cL29tMi5kZmUub25lbWFwLnNnXC9hcGlcL3YyXC91c2VyXC9zZXNzaW9uIiwiaWF0IjoxNTg0NTM1NDAwLCJleHAiOjE1ODQ5Njc0MDAsIm5iZiI6MTU4NDUzNTQwMCwianRpIjoiODgyMDljYzFkN2FiMTVlOTk3Y2NmYmE1YTQxYTE4MTkifQ.lH_38uJNpIFebKi4cC9vgNa9mkosu1cA0L5DOzqaQ2Q"
+    h = http.Http()
+    response, content = h.request("https://developers.onemap.sg/privateapi/commonsvc/revgeocode?location="+ getlat+"," +
+                                 getlong+"&token="+token+"&buffer=500&addressType=HDB")
+    jsonObj = json.loads(content)
+    return [areaHdb for areaHdb in jsonObj['GeocodeInfo']]
 def getLat(dict):
     for hdb in dict:
         return float(hdb['LATITUDE'])
 def getLong(dict):
     for hdb in dict:
         return float(hdb['LONGITUDE'])
+def getName(dict):
+    for hdb in dict:
+        return str(hdb['ADDRESS'])
 def convert(deg):
     return deg * (math.pi/180)
 
+#Does for oneMap_areaCall
+def testArea(dicts,newdict):
+    count = 0
+    dicts.size
+    for areaHdb in dicts:
+        count+=1
+        newdict.append(areaHdb['BUILDINGNAME'])
+        newdict.append(areaHdb['BLOCK'])
+        newdict.append(areaHdb['ROAD'])
+        newdict.append(areaHdb['POSTALCODE'])
+        newdict.append(areaHdb['LATITUDE'])
+        newdict.append(areaHdb['LONGITUDE'])
+    print(count)
+
+#Does for oneMap_apiCall
 def test(dicts,newdict):
     earthradius = 6371
     punggol_lat = convert(1.3984)
@@ -34,8 +64,8 @@ def test(dicts,newdict):
     for hdb in dicts:
         if hdb['LATITUDE'] and hdb['LONGITUDE']:
             count += 1
-            print(hdb)
             newdict.append(hdb['SEARCHVAL'])
+            newdict.append(hdb['ADDRESS'])
             newdict.append(hdb['LATITUDE'])
             newdict.append(hdb['LONGITUDE'])
     print(count)
@@ -99,10 +129,19 @@ def addUpDist(list1,list2):
     newDist= float(list1[-1][15:]) + float(list2)
     return newDist
 
-#newdict=[]
-#newdict2=[]
+
+def addBehind(list1, test):
+    list1.insert(-2,test)
+def check(list):
+    return list
+
+newdict=[]
+newdict2=[]
 # User Input for Address
-#address = raw_input("Enter Address: ")
+#address = "824174"
 #print(spaceCheck(address))
 #test(oneMap_apicall(spaceCheck(address)),  newdict)
 #print(newdict)
+
+testArea(oneMap_areaCall(1.3984,103.9072),newdict)
+print(newdict)
