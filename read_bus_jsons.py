@@ -14,15 +14,15 @@ def checkif_in_punggol(dicts, newlist):
 # Get the full details of bus stops
 def get_punggol_busstop_details():
     punggol_buses = json.loads(open('datasets/bus/punggol_buses.json').read())
-    stops_desc = {stops['Description']: stops['BusServices'] for stops in punggol_buses}
-    return stops_desc
+    print(punggol_buses)
+    return punggol_buses
 
 
 # Get the bus stops and the buses that goes through it
 def get_punggol_bus_stops_with_services():
     punggol_buses = json.loads(open('datasets/bus/punggol_buses.json').read())
     stops_desc = {stops['Description']: stops['BusServices'] for stops in punggol_buses}
-    return punggol_buses
+    return stops_desc
 
 
 # Get all the bus numbers that goes through punggol
