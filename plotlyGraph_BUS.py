@@ -19,7 +19,12 @@ def findRouteGraph(start,end):
     #setting the route as red colour node with a bigger size
     for i in range(0,len(route)):
         #only node can be coloured
-        net.add_node(route[i],size=10,color='green')
+        if (i == 0):
+            net.add_node(route[i], size=10, color='green', title="Starting Point")
+        elif (i == len(route) - 1):
+            net.add_node(route[i], size=10, color='green', title="Ending Point")
+        else:
+            net.add_node(route[i], size=10, color='green')
 
         #net.add_node(route[i], size=10)
 
@@ -43,6 +48,7 @@ def findRouteGraph(start,end):
     #print(net.edges)
 
 
-    #net.toggle_physics(True)
-    net.show("plotlyFlask.html")
+    # show network graph is there is a route
+    if (len(route) > 0):
+        net.show("plotlyFlask.html")
 

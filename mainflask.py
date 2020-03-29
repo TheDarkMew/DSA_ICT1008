@@ -19,7 +19,7 @@ def index():
     data = pd.read_excel(r'HDBExcel2.xlsx')
     df = pd.DataFrame(data, columns=['punggol blk_no']) #COLUMN TITLE
     blkno = data['punggol blk_no'].tolist()  #GETTING ALL THE BLK NO FROM EXCEL FILE
-    #print(blkno)
+     # #print(blkno)
     folium_map.save('templates/folium_map.html')
     return render_template("index.html",blkno=blkno)
 

@@ -1,4 +1,3 @@
-
 from pyvis.network import Network
 import dijkstra as dj
 
@@ -34,30 +33,35 @@ def findRouteGraph(start,end):
 
     #aading all the nodes and edges to the network graph
 
-    net.add_node('NE17 PTC Punggol', hidden=False, size=5)
-    net.add_node('PE1 Cove', hidden=False, size=5)
-    net.add_node('PE2 Meridian', hidden=False, size=5)
-    net.add_node('PE3 Coral Edge', hidden=False, size=5)
-    net.add_node('PE4 Riviera', hidden=False, size=5)
-    net.add_node('PE7 Damai', hidden=False, size=5)
-    net.add_node('PW1 Sam Kee', hidden=False, size=5)
-    net.add_node('PW3 Punggol Point', hidden=False, size=5)
-    net.add_node('PW4 Samudera', hidden=False, size=5)
-    net.add_node('PW5 Nibong', hidden=False, size=5)
-    net.add_node('PW6 Sumang', hidden=False, size=5)
-    net.add_node('PW7 Soo Teck', hidden=False, size=5)
-    net.add_node('PE5 Kadaloor', hidden=False, size=5)
-    net.add_node('PE6 Oasis', hidden=False, size=5)
+    # net.add_node('NE17 PTC Punggol', hidden=False, size=5)
+    # net.add_node('PE1 Cove', hidden=False, size=5)
+    # net.add_node('PE2 Meridian', hidden=False, size=5)
+    # net.add_node('PE3 Coral Edge', hidden=False, size=5)
+    # net.add_node('PE4 Riviera', hidden=False, size=5)
+    # net.add_node('PE7 Damai', hidden=False, size=5)
+    # net.add_node('PW1 Sam Kee', hidden=False, size=5)
+    # net.add_node('PW3 Punggol Point', hidden=False, size=5)
+    # net.add_node('PW4 Samudera', hidden=False, size=5)
+    # net.add_node('PW5 Nibong', hidden=False, size=5)
+    # net.add_node('PW6 Sumang', hidden=False, size=5)
+    # net.add_node('PW7 Soo Teck', hidden=False, size=5)
+    # net.add_node('PE5 Kadaloor', hidden=False, size=5)
+    # net.add_node('PE6 Oasis', hidden=False, size=5)
 
-    for i in range(0, len(dj.edges)):
+        # aading all the nodes and edges to the network graph
+        for i in range(0, len(dj.edges)):
+            # all address will be shown
+            net.add_node(dj.edges[i][0], size=5)
+            net.add_node(dj.edges[i][1], size=5)
+            # only route addresses will be shown
+            # net.add_node(dj.edges[i][0],size=5,hidden=True)
+            # net.add_node(dj.edges[i][1],size=5,hidden=True)
 
-        #net.add_node(dj.edges[i][0], size=5, hiddden =False)
-        net.add_node(dj.edges[i][0], size=5,hidden=True)
-        net.add_node(dj.edges[i][1], size=5,hidden=True)
-
-        # edges line is hidden, only route edges will be shown
-        net.add_edge(dj.edges[i][0], dj.edges[i][1], weight=dj.edges[i][2],hidden=True)
-
-    #net.toggle_physics(True)
-    net.show("plotlyFlask.html")
+            # edges line is hidden, only route edges will be shown
+            # net.add_edge(dj.edges[i][0],dj.edges[i][1], weight=dj.edges[i][2],hidden=True)
+            # all edges will be shown
+            net.add_edge(dj.edges[i][0], dj.edges[i][1], weight=dj.edges[i][2])
+    # show network graph is there is a route
+    if (len(route) > 0):
+        net.show("plotlyFlask.html")
 
