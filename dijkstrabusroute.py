@@ -28,8 +28,10 @@ def add_edges_hdbbus(hdbsg, databus, edges):
         for rowhdb in hdbsg:
             x = distance(float(rowbus[1]), float(rowhdb[1]), float(rowbus[2]), float(rowhdb[2]))
             x = float("%.2f" % round(x, 2))
-            if x < 0.1:
+            if x < 0.15:
                 edges.append((rowbus[0], rowhdb[7], x))
+
+
 
     edges = list(dict.fromkeys(edges))  # remove duplicates
     edges.sort(key=sortFirst)  # sort first element ascending order
@@ -166,5 +168,5 @@ hdbbus = readHDBSGforbusstop(buslist, hdbbus)
 for edge in hdbbus:
     graph.add_edge(*edge)
 
-#print (dijsktra(graph, 'Punggol Temp Int', '175 PUNGGOL FIELD MULTI STOREY CAR PARK SINGAPORE 820175'))
+#print (dijsktra(graph, 'Punggol Temp Int', '25 PUNGGOL FIELD WALK WATERWOODS SINGAPORE 828751'))
 
